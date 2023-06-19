@@ -44,6 +44,10 @@ public class TelegramBotLogic extends TelegramLongPollingBot {
         long chatId = update.getMessage().getChatId();
         boolean isExist = gateway.isCustomerExist(userId);
 
+        if(receivedMessage == null) {
+            return;
+        }
+
         if(!isExist && receivedMessage.equals(start)) {
             gateway.addCustomer(new AddCustomerBodyModel(chatId, userId, start, 0));
         } else if(isExist && update.hasMessage() && !receivedMessage.equals(start)) {
