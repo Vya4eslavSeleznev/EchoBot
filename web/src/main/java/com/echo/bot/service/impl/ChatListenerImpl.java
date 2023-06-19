@@ -20,7 +20,7 @@ public class ChatListenerImpl implements ChatListener {
     public void processMessage(String model) {
         try {
             MessageEventModel event = objectMapper.readValue(model, MessageEventModel.class);
-            botLogic.sedMessage(event);
+            botLogic.sendMessage(event);
         }
         catch(JsonProcessingException e) {
             e.printStackTrace();

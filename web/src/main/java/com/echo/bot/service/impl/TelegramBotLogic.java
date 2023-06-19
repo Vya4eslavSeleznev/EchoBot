@@ -57,7 +57,7 @@ public class TelegramBotLogic extends TelegramLongPollingBot {
         }
     }
 
-    public void sedMessage(MessageEventModel event) {
+    public void sendMessage(MessageEventModel event) {
         SendMessage message = new SendMessage();
         message.setChatId(event.getChatId());
         message.setText(event.getMessage() + " " + event.getIndex());

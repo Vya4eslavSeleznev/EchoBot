@@ -37,7 +37,7 @@ public class Customer {
     @Column(nullable = false)
     private long index;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "delay_id")
     private Delay delay;
 }
