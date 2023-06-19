@@ -7,9 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserMessageEventModel {
+public class UserMessageResponseModel {
 
     private long chatId;
     private String message;
-    private long userId;
+    private long index;
+    private long delay;
 }

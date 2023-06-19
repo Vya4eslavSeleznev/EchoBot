@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserMessageEventModel {
+public class MessageEventModel {
 
-    private String username;
+    private long chatId;
     private String message;
-    private Long userId;
+    private long index;
 }

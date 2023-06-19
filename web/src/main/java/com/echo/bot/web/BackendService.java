@@ -1,6 +1,8 @@
 package com.echo.bot.web;
 
 import com.echo.bot.model.AddCustomerBodyModel;
+import com.echo.bot.model.UserMessageBodyModel;
+import com.echo.bot.model.UserMessageResponseModel;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -14,4 +16,7 @@ public interface BackendService {
 
     @GET("/customer/exist/{id}")
     Call<Boolean> isCustomerExist(@Path("id") long id);
+
+    @POST("/customer/index")
+    Call<UserMessageResponseModel> saveMessage(@Body UserMessageBodyModel userMessageEventBodyModel);
 }

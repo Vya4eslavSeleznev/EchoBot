@@ -1,6 +1,6 @@
 package com.echo.bot.service.impl;
 
-import com.echo.bot.model.UserMessageEventModel;
+import com.echo.bot.model.MessageEventModel;
 import com.echo.bot.service.MessageSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,10 +24,10 @@ public class MessageSenderImpl implements MessageSender {
     }
 
     @Override
-    public void sendMessage(UserMessageEventModel userMessageEventModel) {
+    public void sendMessage(MessageEventModel messageEventModel, long delay) {
         try {
-            jmsTemplate.convertAndSend(queue, objectMapper.writeValueAsString(userMessageEventModel), m -> {
-                m.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, 10000);
+            jmsTemplate.convertAndSend(queue, objectMapper.writeValueAsString(messageEventModel), m -> {
+                m.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, delay);
                 return m;
             });
         }

@@ -3,6 +3,8 @@ package com.echo.bot.controller;
 import com.echo.bot.exception.CustomerNotFoundException;
 import com.echo.bot.model.AddCustomerBodyModel;
 import com.echo.bot.model.UpdateDelayBodyModel;
+import com.echo.bot.model.UserMessageBodyModel;
+import com.echo.bot.model.UserMessageResponseModel;
 import com.echo.bot.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,18 @@ public class CustomerController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
+    }
 
+    @PostMapping("/index")
+    public ResponseEntity<UserMessageResponseModel> saveMessage(
+      @RequestBody UserMessageBodyModel userMessageEventBodyModel) {
+
+        try {
+            return new ResponseEntity<>(customerService.saveMessage(userMessageEventBodyModel), HttpStatus.OK);
+        }
+        catch(CustomerNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
     }
 }

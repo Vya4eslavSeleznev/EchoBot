@@ -1,8 +1,11 @@
 package com.echo.bot.web;
 
 import com.echo.bot.model.AddCustomerBodyModel;
+import com.echo.bot.model.UserMessageBodyModel;
+import com.echo.bot.model.UserMessageResponseModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -16,13 +19,13 @@ public class Gateway {
 
     private final BackendService service;
 
-    public Gateway() {
+    public Gateway(@Value("${backend.url}") String backendUrl) {
         Gson gson = new GsonBuilder()
           .setDateFormat("yyyy-MM-dd")
           .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-          .baseUrl("http://192.168.15.4:8080")
+          .baseUrl(backendUrl)
           .addConverterFactory(GsonConverterFactory.create(gson))
           .build();
 
@@ -50,5 +53,18 @@ public class Gateway {
         }
 
         return false;
+    }
+
+    public UserMessageResponseModel saveMessage(UserMessageBodyModel userMessageBodyModel) {
+        Call<UserMessageResponseModel> msg = service.saveMessage(userMessageBodyModel);
+
+        try {
+            Response<UserMessageResponseModel> response = msg.execute();
+            return response.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

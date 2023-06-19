@@ -1,13 +1,17 @@
 package com.echo.bot.service.impl;
 
 import com.echo.bot.model.AddCustomerBodyModel;
-import com.echo.bot.model.UserMessageEventModel;
+import com.echo.bot.model.MessageEventModel;
+import com.echo.bot.model.UserMessageBodyModel;
+import com.echo.bot.model.UserMessageResponseModel;
 import com.echo.bot.service.MessageSender;
 import com.echo.bot.web.Gateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.validation.constraints.NotNull;
 
@@ -34,22 +38,35 @@ public class TelegramBotLogic extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(@NotNull Update update) {
         String start = "/start";
-        String delay = "/delay";
 
         String receivedMessage = update.getMessage().getText();
         long userId = update.getMessage().getFrom().getId();
         long chatId = update.getMessage().getChatId();
         boolean isExist = gateway.isCustomerExist(userId);
 
-        if(!isExist && update.getMessage().getText().equals(start)) {
+        if(!isExist && receivedMessage.equals(start)) {
             gateway.addCustomer(new AddCustomerBodyModel(chatId, userId, start, 0));
-        } else if(isExist && update.hasMessage()) {
-            messageSender.sendMessage(new UserMessageEventModel(chatId, receivedMessage, userId));
+        } else if(isExist && update.hasMessage() && !receivedMessage.equals(start)) {
+            UserMessageResponseModel responseModel = gateway.saveMessage(
+              new UserMessageBodyModel(chatId, receivedMessage, userId)
+            );
 
+            messageSender.sendMessage(
+              new MessageEventModel(chatId, receivedMessage, responseModel.getIndex()), responseModel.getDelay()
+            );
+        }
+    }
 
+    public void sedMessage(MessageEventModel event) {
+        SendMessage message = new SendMessage();
+        message.setChatId(event.getChatId());
+        message.setText(event.getMessage() + " " + event.getIndex());
 
-        } else if(isExist && update.getMessage().getText().equals(delay)) {
-            // setDelay
+        try {
+            execute(message);
+        }
+        catch(TelegramApiException e) {
+            throw new RuntimeException(e);
         }
     }
 }
