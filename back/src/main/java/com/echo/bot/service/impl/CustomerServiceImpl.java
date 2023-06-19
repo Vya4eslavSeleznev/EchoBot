@@ -2,7 +2,9 @@ package com.echo.bot.service.impl;
 
 import com.echo.bot.entity.Customer;
 import com.echo.bot.entity.Delay;
+import com.echo.bot.exception.CustomerNotFoundException;
 import com.echo.bot.model.AddCustomerBodyModel;
+import com.echo.bot.model.UpdateDelayBodyModel;
 import com.echo.bot.repository.CustomerRepository;
 import com.echo.bot.repository.DelayRepository;
 import com.echo.bot.service.CustomerService;
@@ -34,5 +36,18 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean isCustomerExist(long userId) {
         Optional<Customer> customer = customerRepository.findByUserId(userId);
         return customer.isPresent();
+    }
+
+    @Override
+    public void updateDelay(UpdateDelayBodyModel updateDelayBodyModel) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findByUserId(updateDelayBodyModel.getUserId());
+
+        if(customer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
+
+        Optional<Delay> delay = delayRepository.findById(customer.get().getDelay().getId());
+        delay.get().setValue(updateDelayBodyModel.getDelay());
+        customer.get().setDelay(delay.get());
     }
 }
