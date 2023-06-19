@@ -1,0 +1,15 @@
+back/gradlew
+back/gradlew.bat
+back/.gradle/*
+back/.idea/*
+back/build/classes/*
+back/gradle/wrapper/gradle-wrapper.jar
+back/build/*
+
+web/gradlew
+web/gradlew.bat
+web/.gradle/*
+web/.idea/*
+web/build/classes/*
+web/gradle/wrapper/gradle-wrapper.jar
+web/build/*

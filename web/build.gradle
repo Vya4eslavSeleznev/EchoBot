@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id("org.springframework.boot") version "2.7.12"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
+}
+
+group 'com.echo'
+version '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.projectlombok:lombok")
+    runtimeOnly("org.postgresql:postgresql")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-activemq
+    implementation 'org.springframework.boot:spring-boot-starter-activemq:2.7.12'
+// https://mvnrepository.com/artifact/org.telegram/telegrambots
+    implementation 'org.telegram:telegrambots:6.7.0'
+
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-spring
+    implementation 'org.apache.activemq:activemq-spring:5.18.1'
+
+
+// https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+// https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+
+
+    // https://mvnrepository.com/artifact/jakarta.jms/jakarta.jms-api
+    //implementation 'jakarta.jms:jakarta.jms-api:3.1.0'
+
+
+}
