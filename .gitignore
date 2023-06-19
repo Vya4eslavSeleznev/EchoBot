@@ -13,3 +13,5 @@ web/.idea/*
 web/build/classes/*
 web/gradle/wrapper/gradle-wrapper.jar
 web/build/*
+
+data/db/*

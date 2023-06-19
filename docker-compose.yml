@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    ports:
+      - 5433:5432
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - -d
+        - postgres
+        - -U
+        - postgres
+      interval: 5s
+      timeout: 1s
+      retries: 25
+      start_period: 5s
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PWD: root123
+      POSTGRES_DB: bot
+    volumes:
+      - ./data/01_create_delay.sql:/docker-entrypoint-initdb.d/01_create_delay.sql
+      - ./data/02_create_customer.sql:/docker-entrypoint-initdb.d/02_create_customer.sql
+      - ./data/db:/var/lib/postgresql/data
+    restart: always
+
+  activemq:
+    image: webcenter/activemq:5.14.3
+    restart: always
+    container_name: activemq
+    environment:
+      ACTIVEMQ_CONFIG_SCHEDULERENABLED: true
+    ports:
+      - 8162:8161
+
+  backend:
+    image: backend:latest
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    restart: always
+    container_name: backend
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PWD: root123
+      POSTGRES_DB: bot
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    image: api:latest
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: always
+    container_name: api
+    environment:
+      BOT_NAME:
+      BOT_TOKEN:
+    depends_on:
+      - backend
