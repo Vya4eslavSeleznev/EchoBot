@@ -15,6 +15,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -23,8 +27,5 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation 'org.springframework.boot:spring-boot-starter-activemq:2.7.12'
-
-
-    // https://mvnrepository.com/artifact/org.springframework/spring-jms
     implementation 'org.springframework:spring-jms:5.3.27'
 }
