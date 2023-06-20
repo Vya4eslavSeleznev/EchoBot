@@ -16,7 +16,7 @@ public class DelayController {
 
     private DelayService delayService;
 
-    @PutMapping()
+    @PutMapping("/{value}")
     public ResponseEntity<?> updateDelay(@PathVariable("value") long value) {
         delayService.updateDelay(value);
         return new ResponseEntity<>(HttpStatus.OK);

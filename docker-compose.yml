@@ -20,7 +20,7 @@ services:
       start_period: 5s
     environment:
       POSTGRES_USERNAME: postgres
-      POSTGRES_PWD: root123
+      POSTGRES_PASSWORD: root123
       POSTGRES_DB: bot
     volumes:
       - ./data/01_create_delay.sql:/docker-entrypoint-initdb.d/01_create_delay.sql
@@ -46,6 +46,8 @@ services:
       POSTGRES_PWD: root123
       POSTGRES_DB: bot
       DELAY_VALUE: 2000
+    ports:
+      - 8083:8080
     depends_on:
       postgres:
         condition: service_healthy

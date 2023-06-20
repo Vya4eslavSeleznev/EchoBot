@@ -42,7 +42,7 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/last")
+    @GetMapping("/last/{id}")
     public ResponseEntity<GetLastMessageResponseModel> getLastMessage(@PathVariable long id) {
         try {
             return new ResponseEntity<>(customerService.getMessage(id), HttpStatus.OK);
