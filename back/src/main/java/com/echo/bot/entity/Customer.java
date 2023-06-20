@@ -13,12 +13,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Customer {
 
-    public Customer(long chatId, long userId, String lastMessage, long index, Delay delay) {
+    public Customer(long chatId, long userId, String lastMessage, long index, String username) {
         this.chatId = chatId;
         this.userId = userId;
         this.lastMessage = lastMessage;
         this.index = index;
-        this.delay = delay;
+        this.username = username;
     }
 
     @Id
@@ -37,7 +37,6 @@ public class Customer {
     @Column(nullable = false)
     private long index;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "delay_id")
-    private Delay delay;
+    @Column(nullable = false)
+    private String username;
 }

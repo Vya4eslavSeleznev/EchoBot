@@ -2,7 +2,7 @@ package com.echo.bot.controller;
 
 import com.echo.bot.exception.CustomerNotFoundException;
 import com.echo.bot.model.AddCustomerBodyModel;
-import com.echo.bot.model.UpdateDelayBodyModel;
+import com.echo.bot.model.GetLastMessageResponseModel;
 import com.echo.bot.model.UserMessageBodyModel;
 import com.echo.bot.model.UserMessageResponseModel;
 import com.echo.bot.service.CustomerService;
@@ -25,20 +25,8 @@ public class CustomerController {
     }
 
     @GetMapping("/exist/{id}")
-    public ResponseEntity<Boolean> isCustomerExist(@PathVariable long id) {
+    public ResponseEntity<Boolean> isCustomerExist(@PathVariable("id") long id) {
         return new ResponseEntity<>(customerService.isCustomerExist(id), HttpStatus.OK);
-    }
-
-    @PutMapping()
-    public ResponseEntity<?> updateDelay(UpdateDelayBodyModel updateDelayBodyModel) {
-        try {
-            customerService.updateDelay(updateDelayBodyModel);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(CustomerNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
-        }
     }
 
     @PostMapping("/index")
@@ -47,6 +35,17 @@ public class CustomerController {
 
         try {
             return new ResponseEntity<>(customerService.saveMessage(userMessageEventBodyModel), HttpStatus.OK);
+        }
+        catch(CustomerNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @GetMapping("/last")
+    public ResponseEntity<GetLastMessageResponseModel> getLastMessage(@PathVariable long id) {
+        try {
+            return new ResponseEntity<>(customerService.getMessage(id), HttpStatus.OK);
         }
         catch(CustomerNotFoundException e) {
             e.printStackTrace();

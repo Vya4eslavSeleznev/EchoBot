@@ -1,6 +1,7 @@
 package com.echo.bot.web;
 
 import com.echo.bot.model.AddCustomerBodyModel;
+import com.echo.bot.model.GetLastMessageResponseModel;
 import com.echo.bot.model.UserMessageBodyModel;
 import com.echo.bot.model.UserMessageResponseModel;
 import com.google.gson.Gson;
@@ -66,5 +67,28 @@ public class Gateway {
         }
 
         return null;
+    }
+
+    public GetLastMessageResponseModel getLastMessage(long userId) {
+        Call<GetLastMessageResponseModel> msg = service.getLastMessage(userId);
+
+        try {
+            Response<GetLastMessageResponseModel> response = msg.execute();
+            return response.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void updateDelay(long value) {
+        Call<Void> delay = service.updateDelay(value);
+
+        try {
+            delay.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

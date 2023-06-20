@@ -12,4 +12,5 @@ public class UserMessageBodyModel {
     private long chatId;
     private String message;
     private long userId;
+    private String username;
 }

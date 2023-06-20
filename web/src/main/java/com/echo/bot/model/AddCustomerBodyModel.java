@@ -13,4 +13,5 @@ public class AddCustomerBodyModel {
     private long userId;
     private String lastMessage;
     private long index;
+    private String username;
 }

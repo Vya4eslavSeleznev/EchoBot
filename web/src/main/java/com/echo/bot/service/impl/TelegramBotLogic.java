@@ -40,6 +40,7 @@ public class TelegramBotLogic extends TelegramLongPollingBot {
         String start = "/start";
 
         String receivedMessage = update.getMessage().getText();
+        String username = update.getMessage().getFrom().getUserName();
         long userId = update.getMessage().getFrom().getId();
         long chatId = update.getMessage().getChatId();
         boolean isExist = gateway.isCustomerExist(userId);
@@ -49,10 +50,10 @@ public class TelegramBotLogic extends TelegramLongPollingBot {
         }
 
         if(!isExist && receivedMessage.equals(start)) {
-            gateway.addCustomer(new AddCustomerBodyModel(chatId, userId, start, 0));
+            gateway.addCustomer(new AddCustomerBodyModel(chatId, userId, start, 0, username));
         } else if(isExist && update.hasMessage() && !receivedMessage.equals(start)) {
             UserMessageResponseModel responseModel = gateway.saveMessage(
-              new UserMessageBodyModel(chatId, receivedMessage, userId)
+              new UserMessageBodyModel(chatId, receivedMessage, userId, username)
             );
 
             messageSender.sendMessage(
