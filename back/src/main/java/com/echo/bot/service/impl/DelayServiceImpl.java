@@ -3,9 +3,7 @@ package com.echo.bot.service.impl;
 import com.echo.bot.entity.Delay;
 import com.echo.bot.repository.DelayRepository;
 import com.echo.bot.service.DelayService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -27,11 +25,9 @@ public class DelayServiceImpl implements DelayService {
     @Override
     @PostConstruct
     public void initDelay() {
-        Delay delay = delayRepository.save(
+        delayRepository.save(
           new Delay(Integer.parseInt(delayValue))
         );
-
-        delayRepository.save(delay);
     }
 
     @Override
