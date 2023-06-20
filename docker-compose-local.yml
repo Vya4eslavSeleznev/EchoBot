@@ -38,7 +38,10 @@ services:
       - 8162:8161
 
   backbot:
-    image: vya4eslava/backbot:latest
+    image: backbot:latest
+    build:
+      context: ./back
+      dockerfile: Dockerfile
     restart: always
     container_name: backbot
     environment:
@@ -51,12 +54,15 @@ services:
         condition: service_healthy
 
   apibot:
-    image: vya4eslava/apibot:latest
+    image: apibot:latest
+    build:
+      context: ./web
+      dockerfile: Dockerfile
     restart: always
     container_name: apibot
     environment:
       BOT_NAME:
-      BOT_TOKEN:
+      BOT_TOKEN: 
     ports:
       - 8082:8080
     depends_on:
