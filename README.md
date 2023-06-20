@@ -127,7 +127,7 @@ API.
 
 ```json
 {
-  "username": 1,
+  "username": "Vya4eslav",
   "message": "qwerty"
 }
 ```
@@ -146,7 +146,7 @@ http://localhost:8083/swagger-ui/index.html#/
 
 # Как запустить?
 
-- Предварительно мной был создан образ приложения и добавлен на [DockerHub](https://hub.docker.com/u/vya4eslava):
+- Предварительно мной были созданы образ приложения и добавлены на [DockerHub](https://hub.docker.com/u/vya4eslava):
 
 - Для запуска Вам необходимо клонировать на свой компьютер репозиторий. Либо скачать .zip архив с проектом
 
