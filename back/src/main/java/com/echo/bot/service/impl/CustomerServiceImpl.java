@@ -1,15 +1,14 @@
 package com.echo.bot.service.impl;
 
 import com.echo.bot.entity.Customer;
-import com.echo.bot.entity.Delay;
 import com.echo.bot.exception.CustomerNotFoundException;
 import com.echo.bot.model.AddCustomerBodyModel;
-import com.echo.bot.model.UpdateDelayBodyModel;
+import com.echo.bot.model.GetLastMessageResponseModel;
 import com.echo.bot.model.UserMessageBodyModel;
 import com.echo.bot.model.UserMessageResponseModel;
 import com.echo.bot.repository.CustomerRepository;
-import com.echo.bot.repository.DelayRepository;
 import com.echo.bot.service.CustomerService;
+import com.echo.bot.service.DelayService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +19,13 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;
-    private DelayRepository delayRepository;
+    private DelayService delayService;
 
     @Override
     public void addCustomer(AddCustomerBodyModel addCustomerBodyModel) {
-        Delay delay = delayRepository.save(
-          new Delay(2000)
-        );
-
         customerRepository.save(
           new Customer(addCustomerBodyModel.getChatId(), addCustomerBodyModel.getUserId(),
-            addCustomerBodyModel.getLastMessage(), addCustomerBodyModel.getIndex(), delay)
+            addCustomerBodyModel.getLastMessage(), addCustomerBodyModel.getIndex(), addCustomerBodyModel.getUsername())
         );
     }
 
@@ -41,38 +36,41 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateDelay(UpdateDelayBodyModel updateDelayBodyModel) throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByUserId(updateDelayBodyModel.getUserId());
-
-        if(customer.isEmpty()) {
-            throw new CustomerNotFoundException();
-        }
-
-        Optional<Delay> delay = delayRepository.findById(customer.get().getDelay().getId());
-        delay.get().setValue(updateDelayBodyModel.getDelay());
-        customer.get().setDelay(delay.get());
-    }
-
-    @Override
     public UserMessageResponseModel saveMessage(UserMessageBodyModel userMessageEventModel)
       throws CustomerNotFoundException {
-        Optional<Customer> customer = customerRepository.findByUserId(userMessageEventModel.getUserId());
+        Customer customer = getCustomer(userMessageEventModel.getUserId());
 
-        if(customer.isEmpty()) {
-            throw new CustomerNotFoundException();
-        }
+        long oldIndex = customer.getIndex();
 
-        long oldIndex = customer.get().getIndex();
+        customer.setLastMessage(userMessageEventModel.getMessage());
+        customer.setIndex(++oldIndex);
+        customer.setUsername(userMessageEventModel.getUsername());
 
-        customer.get().setLastMessage(userMessageEventModel.getMessage());
-        customer.get().setIndex(++oldIndex);
-
-        customerRepository.save(customer.get());
+        customerRepository.save(customer);
 
         return new UserMessageResponseModel(
           userMessageEventModel.getChatId(), userMessageEventModel.getMessage(),
-          customer.get().getIndex(), customer.get().getDelay().getValue()
+          customer.getIndex(), delayService.getValueOfDelay()
         );
+    }
+
+    @Override
+    public GetLastMessageResponseModel getMessage(long userId) throws CustomerNotFoundException {
+        Customer customer = getCustomer(userId);
+
+        return new GetLastMessageResponseModel(
+          customer.getUserId(), customer.getLastMessage()
+        );
+    }
+
+    private Customer getCustomer(long userId) throws CustomerNotFoundException {
+        Optional<Customer> customer = customerRepository.findByUserId(userId);
+
+        if(customer.isEmpty()) {
+            throw new CustomerNotFoundException();
+        }
+
+        return customer.get();
     }
 }
 
