@@ -9,13 +9,8 @@ CREATE TABLE IF NOT EXISTS public.customer
     user_id integer NOT NULL,
     last_msg character varying COLLATE pg_catalog."default" NOT NULL,
     index integer NOT NULL,
-    delay_id integer NOT NULL,
-    CONSTRAINT customer_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_delay FOREIGN KEY (delay_id)
-        REFERENCES public.delay (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    username character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT customer_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;
